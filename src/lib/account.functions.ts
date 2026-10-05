@@ -4,7 +4,7 @@ import { z } from "zod";
 
 /** Signs in by username: resolves the private auth email server-side so it is never exposed to the browser. */
 export const loginWithUsername = createServerFn({ method: "POST" })
-  .inputValidator((d) => z.object({ username: z.string().min(3).max(20), password: z.string().min(3).max(40) }).parse(d))
+  .validator((d) => z.object({ username: z.string().min(3).max(20), password: z.string().min(3).max(40) }).parse(d))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: prof } = await supabaseAdmin.from("profiles").select("id").ilike("username", data.username.replace(/[%_\\]/g, "\\$&")).maybeSingle();

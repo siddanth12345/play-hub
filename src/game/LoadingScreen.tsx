@@ -79,7 +79,7 @@ export function LoadingScreen({ onDone }: { onDone: () => void }) {
 
   const ready = minDone && shown >= 100;
   return (
-    <div className="fixed inset-0 z-50 select-none overflow-hidden bg-hud-panel font-mono text-hud">
+    <div className="fixed inset-0 z-50 select-none overflow-hidden bg-hud-ink font-mono text-hud">
       <div className="absolute inset-x-0 bottom-16 flex flex-col items-center gap-4">
         <h1 className="text-5xl font-black uppercase tracking-tight">Table Wars</h1>
         <div className="h-3 w-80 overflow-hidden rounded bg-hud-track"><div className="h-full bg-crosshair transition-[width]" style={{ width: `${shown}%` }} /></div>
