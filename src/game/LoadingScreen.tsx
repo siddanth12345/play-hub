@@ -33,8 +33,10 @@ export function LoadingScreen({ onDone }: { onDone: () => void }) {
   const phys = useRef({ x: 0, y: 0, vx: 260, vy: -180, drag: false, lx: 0, ly: 0, lt: 0, ox: 0, oy: 0 });
 
   useEffect(() => { const t = setTimeout(() => setMinDone(true), 1800); return () => clearTimeout(t); }, []);
+  // Never get stuck: after 10s let the player continue even if a download stalls.
+  useEffect(() => { const t = setTimeout(() => setShown(100), 10000); return () => clearTimeout(t); }, []);
   useEffect(() => {
-    const id = setInterval(() => setShown((s) => Math.min(active ? progress : 100, s + 4)), 40);
+    const id = setInterval(() => setShown((s) => (s >= 100 ? 100 : Math.min(active ? progress : 100, s + 4))), 40);
     return () => clearInterval(id);
   }, [progress, active]);
 
