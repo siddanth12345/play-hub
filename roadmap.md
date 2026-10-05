@@ -16,3 +16,6 @@
 - [x] Night lamps 1.5x, moon 2x, player glow, light from shots/bombs/ground pounds (0.5x lamp) and bot tables (0.3x lamp).
 - [x] Always open on home, orange-glow Tutorial button, hover grow + cursor glow on buttons, 1.5x room reflectivity on home.
 - [x] Training mode (home only): Enter opens sandbox menu with timed brown/blue/boss spawns, boss/player tuning, Close/Cancel/Despawn all; deaths keep everything. FOV slider + screen shake toggle in settings.
+- [x] Online phase 1: draggable loading screen, accounts (username/password, optional email), guest, cloud-saved settings + training options
+- [ ] Online phase 2: Play side menu, 1v1 queue, map vote, 1v1 rules, first-to-3, rematch/requeue, online pause
+- [ ] Online phase 3: Lobby with 6-letter codes (8 players), Party (4 players), invites
