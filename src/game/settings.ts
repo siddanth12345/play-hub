@@ -56,10 +56,16 @@ function load() {
   } catch { /* ignore */ }
 }
 
+const applied = new Set<() => void>();
+/** Called after every applySettings (used for account cloud saves). */
+export function onSettingsApplied(f: () => void) { applied.add(f); return () => applied.delete(f); }
+
 export function applySettings(next: Settings) {
+  load();
   SETTINGS = structuredClone(next);
   try { localStorage.setItem(STORE_KEY, JSON.stringify(SETTINGS)); } catch { /* ignore */ }
   subs.forEach((f) => f());
+  applied.forEach((f) => f());
 }
 
 function subscribe(f: () => void) {

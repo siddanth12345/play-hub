@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { G, TRAIN, TRAIN_CMD, TRAIN_DEFAULTS, TRAIN_Q, lockPointer, type TrainCfg, type TrainSpawn } from "./state";
+import { saveTraining } from "./account";
 
 function useTick(ms: number) {
   const [, tick] = useState(0);
@@ -58,6 +59,7 @@ export function TrainingMenu() {
     if (apply) {
       const hpChanged = draft.maxHp !== TRAIN.maxHp;
       Object.assign(TRAIN, draft);
+      saveTraining();
       TRAIN_Q.push(...queue.map((q) => ({ ...q })));
       if (hpChanged) G.playerHp = TRAIN.maxHp;
       G.playerHp = Math.min(G.playerHp, TRAIN.maxHp);

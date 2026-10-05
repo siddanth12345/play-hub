@@ -9,6 +9,9 @@ import * as THREE from "three";
 import { World } from "./World";
 import { G, MAG, PARRY_CD, DASH_CD, BOMB_CD, TABLE_CAP, cfg, resetGame, lockPointer, MAP, TUT_STEPS, goHome, finishTutorial } from "./state";
 import { ROOM, SOLIDS, WINDOW_ANGLES } from "./Room";
+import { LoadingScreen } from "./LoadingScreen";
+import { AuthPanel, AccountBadge } from "./AuthPanel";
+import { initAccount } from "./account";
 
 const LIGHT = {
   day: { hemiSky: "#e6f1ff", hemiGround: "#8a8f94", hemi: 0.75, amb: 0.3, ambC: "#f2f7ff", sun: 6.5, sunC: "#f6f9ff", bg: "#9cc9f0", fog: "#cfe3f5", lf: "#eef5ff", lf2: "#b9cde0", lfI: 0.9 },
@@ -379,6 +382,7 @@ function Home() {
       <div className="flex w-full max-w-md flex-col justify-center bg-hud-panel/70 p-10 backdrop-blur-[2px]">
         <h1 className="text-6xl font-black leading-none tracking-tight">Table<br />Wars</h1>
         <p className="mt-3 text-sm opacity-70">Break every table. Survive the red boss.</p>
+        <AccountBadge />
         <div className="mt-10 flex flex-col gap-3">
           <button className={btnMain} onClick={playGame}>Play</button>
           <button className={tab === "controls" ? btnMain : btnAlt} onClick={() => setTab(tab === "controls" ? "main" : "controls")}>Controls &amp; Bot Types</button>
@@ -548,6 +552,8 @@ function WinScreen() {
 
 export function Game() {
   const [, force] = useState(0);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => { initAccount(); }, []);
   useEffect(() => {
     // Feed the cursor position to whichever GUI button it is over, for the hover glow.
     const move = (e: PointerEvent) => {
@@ -561,9 +567,6 @@ export function Game() {
     return () => window.removeEventListener("pointermove", move);
   }, []);
   useEffect(() => {
-    let done = false;
-    try { done = localStorage.getItem("tw-tutorial-done") === "1"; } catch { /* ignore */ }
-    void done;
     G.phase = "home";
     force((n) => n + 1);
   }, []);
@@ -579,6 +582,8 @@ export function Game() {
       <TrainingMenu />
       <Home />
       <WinScreen />
+      {!loading && <AuthPanel />}
+      {loading && <LoadingScreen onDone={() => setLoading(false)} />}
     </div>
   );
 }
