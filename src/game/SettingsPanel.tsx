@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ACTIONS, DEFAULT_SETTINGS, applySettings, keyLabel, useSettings, type Action, type Settings, type TimeOfDay } from "./settings";
+import { ACTIONS, DEFAULT_SETTINGS, SETTINGS, applySettings, keyLabel, useSettings, type Action, type Settings, type TimeOfDay } from "./settings";
 
 const TODS: { id: TimeOfDay; label: string; sub: string }[] = [
   { id: "day", label: "Day", sub: "Bright, cool daylight" },
@@ -52,7 +52,7 @@ function Switch({ on, onChange, a, b }: { on: boolean; onChange: (v: boolean) =>
   );
 }
 
-export function SettingsPanel() {
+export function SettingsPanel({ hideTime = false }: { hideTime?: boolean }) {
   const applied = useSettings();
   const [draft, setDraft] = useState<Settings>(() => structuredClone(applied));
   const [binding, setBinding] = useState<Action | null>(null);
@@ -89,7 +89,7 @@ export function SettingsPanel() {
     <div>
       <h3 className="mb-2 border-b border-hud/30 pb-1 text-lg font-black uppercase tracking-widest text-crosshair">Settings</h3>
 
-      <div className="mb-2 mt-4 text-xs font-bold uppercase tracking-widest opacity-70">Time of day</div>
+      {!hideTime && <><div className="mb-2 mt-4 text-xs font-bold uppercase tracking-widest opacity-70">Time of day</div>
       <div className="grid grid-cols-3 gap-3">
         {TODS.map((t) => (
           <button
@@ -102,7 +102,7 @@ export function SettingsPanel() {
             <span className="text-[10px] font-bold uppercase opacity-80">{t.sub}</span>
           </button>
         ))}
-      </div>
+      </div></>}
 
       <div className="mt-4">
         <Row label={`Mouse sensitivity · ${draft.sensitivity.toFixed(2)}x`}>
@@ -134,7 +134,7 @@ export function SettingsPanel() {
       <div className="mt-6 flex flex-wrap items-center gap-3">
         <button
           disabled={!dirty}
-          onClick={() => { applySettings(draft); setSaved(true); }}
+          onClick={() => { applySettings(hideTime ? { ...draft, timeOfDay: SETTINGS.timeOfDay } : draft); setSaved(true); }}
           className="rounded bg-crosshair px-8 py-3 text-lg font-black uppercase text-hud-ink disabled:opacity-40"
         >
           Save &amp; Apply

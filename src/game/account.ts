@@ -4,7 +4,7 @@ import { loginWithUsername } from "@/lib/account.functions";
 import { SETTINGS, applySettings, onSettingsApplied, DEFAULT_SETTINGS, type Settings } from "./settings";
 import { TRAIN, TRAIN_DEFAULTS, type TrainCfg } from "./state";
 
-export type Account = { kind: "none" } | { kind: "guest" } | { kind: "user"; id: string; username: string };
+export type Account = { kind: "none" } | { kind: "guest"; name: string } | { kind: "user"; id: string; username: string };
 
 let ACC: Account = { kind: "none" };
 const subs = new Set<() => void>();
@@ -14,7 +14,7 @@ const set = (a: Account) => { ACC = a; emit(); };
 export const useAccount = () => useSyncExternalStore((f) => { subs.add(f); return () => subs.delete(f); }, () => ACC, () => ACC);
 export const getAccount = () => ACC;
 /** Name shown in online modes. */
-export const displayName = () => (ACC.kind === "user" ? ACC.username : "Guest");
+export const displayName = () => (ACC.kind === "user" ? ACC.username : ACC.kind === "guest" ? ACC.name : "Guest");
 
 export const USERNAME_RE = /^[A-Za-z0-9_]{3,20}$/;
 export function passwordProblem(p: string): string | null {
@@ -95,7 +95,8 @@ export async function resetByEmail(email: string) {
   return error?.message ?? null;
 }
 
-export function playAsGuest() { set({ kind: "guest" }); }
+/** Guests get a fresh random name each time, e.g. Guest482913, so they can party up. */
+export function playAsGuest() { set({ kind: "guest", name: `Guest${Math.floor(100000 + Math.random() * 900000)}` }); }
 export async function signOut() {
   if (ACC.kind === "user") await supabase.auth.signOut();
   set({ kind: "none" });
