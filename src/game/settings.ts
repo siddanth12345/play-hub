@@ -54,6 +54,18 @@ function load() {
       SETTINGS = { ...DEFAULT_SETTINGS, ...p, keys: { ...DEFAULT_SETTINGS.keys, ...(p.keys ?? {}) } };
     }
   } catch { /* ignore */ }
+  refreshView();
+}
+
+/** Online matches can force a time of day without touching the saved settings. */
+let todOverride: TimeOfDay | null = null;
+let VIEW: Settings = SETTINGS;
+function refreshView() { VIEW = todOverride ? { ...SETTINGS, timeOfDay: todOverride } : SETTINGS; }
+export function setTodOverride(t: TimeOfDay | null) {
+  load();
+  todOverride = t;
+  refreshView();
+  subs.forEach((f) => f());
 }
 
 const applied = new Set<() => void>();
@@ -63,6 +75,7 @@ export function onSettingsApplied(f: () => void) { applied.add(f); return () => 
 export function applySettings(next: Settings) {
   load();
   SETTINGS = structuredClone(next);
+  refreshView();
   try { localStorage.setItem(STORE_KEY, JSON.stringify(SETTINGS)); } catch { /* ignore */ }
   subs.forEach((f) => f());
   applied.forEach((f) => f());
@@ -77,7 +90,7 @@ function subscribe(f: () => void) {
 }
 
 export function useSettings() {
-  return useSyncExternalStore(subscribe, () => SETTINGS, () => DEFAULT_SETTINGS);
+  return useSyncExternalStore(subscribe, () => VIEW, () => DEFAULT_SETTINGS);
 }
 
 export function keyLabel(code: string) {

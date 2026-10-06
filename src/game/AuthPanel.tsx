@@ -12,7 +12,7 @@ export function AccountBadge() {
   return (
     <div className="mt-4 flex items-center gap-3 text-sm">
       <span className="opacity-70">Playing as</span>
-      <b className="text-crosshair">{acc.kind === "user" ? acc.username : "Guest"}</b>
+      <b className="text-crosshair">{acc.kind === "user" ? acc.username : acc.name}</b>
       <button className="underline opacity-70 hover:opacity-100" onClick={() => void signOut()}>{acc.kind === "user" ? "Sign out" : "Log in"}</button>
     </div>
   );
