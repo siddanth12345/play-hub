@@ -10,9 +10,9 @@ function SpinTable() {
   useFrame((_, d) => { if (g.current) g.current.rotation.y += d * 1.6; });
   return (
     <group ref={g} position={[0, -1, 0]}>
-      <mesh position={[0, 1.7, 0]}><boxGeometry args={[5, 0.55, 3.4]} /><meshStandardMaterial color="#2fa84f" roughness={0.5} /></mesh>
+      <mesh position={[0, 1.7, 0]}><boxGeometry args={[5, 0.55, 3.4]} /><meshStandardMaterial color="#2f6fd6" roughness={0.5} /></mesh>
       {([[-2, 0.6, -1.2], [2, 0.6, -1.2], [-2, 0.6, 1.2], [2, 0.6, 1.2]] as const).map((p, i) => (
-        <mesh key={i} position={p}><boxGeometry args={[0.45, 2.6, 0.45]} /><meshStandardMaterial color="#197a37" /></mesh>
+        <mesh key={i} position={p}><boxGeometry args={[0.45, 2.6, 0.45]} /><meshStandardMaterial color="#1f4fa8" /></mesh>
       ))}
       {[-0.85, 0.85].map((x) => (
         <group key={x} position={[x, 1.8, 1.72]}>
@@ -24,7 +24,7 @@ function SpinTable() {
   );
 }
 
-/** Full-screen loader. The green table can be grabbed, thrown and bounces off the screen edges. */
+/** Full-screen loader. The blue table can be grabbed, thrown and bounces off the screen edges. */
 export function LoadingScreen({ onDone }: { onDone: () => void }) {
   const { progress, active } = useProgress();
   const [minDone, setMinDone] = useState(false);
@@ -79,7 +79,7 @@ export function LoadingScreen({ onDone }: { onDone: () => void }) {
 
   const ready = minDone && shown >= 100;
   return (
-    <div className="fixed inset-0 z-50 select-none overflow-hidden bg-hud-ink font-mono text-hud">
+    <div className="fixed inset-0 z-50 select-none overflow-hidden bg-hud-ink font-mono text-hud" style={{ backgroundImage: "radial-gradient(ellipse at 50% 35%, oklch(0.32 0.1 255) 0%, oklch(0.18 0.06 260) 70%)" }}>
       <div className="absolute inset-x-0 bottom-16 flex flex-col items-center gap-4">
         <h1 className="text-5xl font-black uppercase tracking-tight">Table Wars</h1>
         <div className="h-3 w-80 overflow-hidden rounded bg-hud-track"><div className="h-full bg-crosshair transition-[width]" style={{ width: `${shown}%` }} /></div>
